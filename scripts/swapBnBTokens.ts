@@ -53,14 +53,17 @@ export async function swapEthForTokens(web3: Web3, ethAmountMillis: string, toke
 }
 
 async function main() {
+    
     const caketokenAddress = "0xe9e7cea3dedca5984780bafc599bd69add087d56"; // for cake
     const busdtokenAddress = "0xe9e7cea3dedca5984780bafc599bd69add087d56";
     const result = await ethers.getSigners();
     let myAccount = result[0]
+    console.log('initial bal', Web3Client.utils.fromWei(await Web3Client.eth.getBalance(myAccount.address)))
+    
     console.log("Account address",myAccount.address)
-    // console.log('swapping...')
-    // await swapEthForTokens(Web3Client, "1000", caketokenAddress, myAccount)
-    // console.log('swapped')
+    console.log('swapping...')
+    await swapEthForTokens(Web3Client, "1000", caketokenAddress, myAccount)
+    console.log('swapped')
     let cakeABI: any = ERC20ABI.abi
     console.log(cakeABI)
     const cakecontract = new Web3Client.eth.Contract(cakeABI, caketokenAddress);
@@ -69,6 +72,7 @@ async function main() {
     console.log("balance fetched")
     const cakeformat = Web3Client.utils.fromWei(cakeresult); // 29803630.997051883414242659
     console.log(cakeformat)
+    console.log('final bal', Web3Client.utils.fromWei(await Web3Client.eth.getBalance(myAccount.address)))
 
 }
 
