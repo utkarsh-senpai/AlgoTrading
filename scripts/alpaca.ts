@@ -51,14 +51,19 @@ const baseTokenAllowance = await baseToken.allowance(
     signer.address,
     vaultAddress,
     )
+console.log('baseTokenAllowance', baseTokenAllowance.toString())
 if (baseTokenAllowance.isZero()) {
+    console.log('approving token')
     await baseToken.approve(vaultAddress, constants.MaxUint256)
+    console.log('allowed')
 }
 const farmingTokenAllowance = await farmingToken.allowance(
     signer.address,
     vaultAddress,
   )
+console.log('farming allowance', farmingTokenAllowance.toString(), inputFarmingTokenAmount.toString())
 if (!inputFarmingTokenAmount.isZero() && farmingTokenAllowance.isZero()) {
+    console.log('approving farming allowance')
     await farmingToken.approve(vaultAddress, constants.MaxUint256)
   }
 
@@ -68,6 +73,7 @@ const nextPositionID = await vault.nextPositionID()
 const encodedStrategyParams = inputFarmingTokenAmount.isZero() ?
 new AddAllBaseTokenStrategy().encodeStrategyParams('0', minFarmingToken) : 
 new TwoSideOptimalStrategy().encodeStrategyParams(inputBaseTokenAmount.toString(), minFarmingToken)
+console.log('creating trade')
 const result = await vault.work(
     0,
     workerAddress,

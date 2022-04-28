@@ -35,7 +35,7 @@ export async function swapEthForTokens(web3: Web3, ethAmountMillis: string, toke
         web3.utils.toHex(Math.round(Date.now()/1000)+60*20),
     );
 
-    
+    console.log(web3.utils.toWei(web3.utils.toBN(ethAmountMillis), 'milli'), toAddr, eth, tokenAddress)
     var count = await web3.eth.getTransactionCount(account.address);
     var rawTransaction = {
         "from":account.address,
@@ -43,7 +43,7 @@ export async function swapEthForTokens(web3: Web3, ethAmountMillis: string, toke
         "value":web3.utils.toHex(web3.utils.toWei(web3.utils.toBN(ethAmountMillis), 'milli')),
         "data":data.encodeABI()
     };
-    console.log('sending transaction...')
+    console.log('sending transaction...', rawTransaction)
     let tx = await account.sendTransaction(rawTransaction);
     console.log('waiting for confirmation...')
     await tx.wait(2)
@@ -65,7 +65,6 @@ async function main() {
     await swapEthForTokens(Web3Client, "1000", caketokenAddress, myAccount)
     console.log('swapped')
     let cakeABI: any = ERC20ABI.abi
-    console.log(cakeABI)
     const cakecontract = new Web3Client.eth.Contract(cakeABI, caketokenAddress);
     console.log('contract initiated')
     const cakeresult = await cakecontract.methods.balanceOf(myAccount.address).call(); // 29803630997051883414242659consol
